@@ -11,7 +11,16 @@ textRect = text.get_rect()
 
 GAME_OVER = False
 
-walls = [[(0,0), (300,0)], [(0,0), (0,180)], [(100, 100), (500, 100)]]
+walls = [
+    [(0,0), (230,0)], # X
+    [(0,0), (0,180)],#Y TOP LEFT
+    [(100, 100), (460, 100)], #TOP MIDDLE
+    [(380,0), (640,0)],#TOP RIGHT 
+    [(0,477),(230,477)]#BOTTTOM LEFT
+#     [(100,477),
+    ]
+                                                                
+
 
 
 
@@ -22,8 +31,9 @@ player_pos = pygame.Vector2(screen.get_width()/2, screen.get_height()/2)
 while running:
     for event in  pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
-            
+            running=False
+
+
             
        # update player position based on keys pressed     
     keys = pygame.key.get_pressed()
