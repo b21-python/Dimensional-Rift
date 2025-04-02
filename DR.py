@@ -15,9 +15,12 @@ walls = [
     [(0,0), (230,0)], # X
     [(0,0), (0,180)],#Y TOP LEFT
     [(100, 100), (460, 100)], #TOP MIDDLE
-    [(380,0), (640,0)],#TOP RIGHT 
-    [(0,477),(230,477)]#BOTTTOM LEFT
-#     [(100,477),
+    [(380,0), (640,0)],#TOP RIGHT
+    [(0,477),(230,477)],#BOTTOM LEFT
+    [(400,477),(640,477)],#BOTTOM Y RIGHT 
+    [(640,477),(640,340)],#BOTTOM X RIGHT 
+    [(0,300),(0,480)], #the first num changes the rotation
+    [(640,180),(640,0)],
     ]
                                                                 
 
