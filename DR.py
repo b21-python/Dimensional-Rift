@@ -30,10 +30,16 @@ walls = [
 # player_pos is essentially:
 # player_pos.x -> horizontal pos | player_.pos.y -> vertical pos
 player_pos = pygame.Vector2(screen.get_width()/2, screen.get_height()/2)
+bullet_pos = player_pos.copy()
+bullet_speed = 7
 enemy_pos = pygame.Vector2(screen.get_width()/4, screen.get_height()/4)
 enemy_hits_wall = False
 player_firing = False
 gun_pos = pygame.Vector2((screen.get_width()/2)+5, screen.get_height()/2)
+bullet_box = None
+player_direction = None
+bullet_direction =None
+bullet_inflight= False
 
 
 while running:
@@ -47,12 +53,16 @@ while running:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
         player_pos.y -= 5
+        player_direction="up"
     if keys[pygame.K_s]:
         player_pos.y += 5 # player speed
+        player_direction="down"
     if keys[pygame.K_a]:
         player_pos.x -= 5
+        player_direction="left"
     if keys[pygame.K_d]:
         player_pos.x += 5
+        player_direction="right"
     if enemy_hits_wall == False:   
         if player_pos.x > enemy_pos.x:
             enemy_pos.x +=1
@@ -66,6 +76,27 @@ while running:
     if mouse_pressed[0]:
         print("firing")
         player_firing = True
+        bullet_inflight =True
+
+    else:
+        player_firing = False
+    if bullet_inflight is False:
+        bullet_pos=player_pos.copy()
+        
+    else: 
+        if bullet_direction== None:
+            bullet_direction = player_direction
+        if bullet_direction =="up":
+            bullet_pos.y-=bullet_speed
+        if bullet_direction =="down":
+            bullet_pos.y+=bullet_speed
+        if bullet_direction =="left":
+            bullet_pos.x-=bullet_speed
+        if bullet_direction =="right":
+            bullet_pos.x+=bullet_speed
+       # bullet_pos=player_pos.copy()
+        #bullet_direction= None
+        
    
     
     
@@ -80,8 +111,8 @@ while running:
     if enemy_box.colliderect(player_box):
         GAME_OVER =True
         running = False
-    if player_firing == True:
-        pygame.draw.line(screen,"orange",[player_pos.x+5,player_pos.y],[player_pos.x+100,player_pos.y+100],10)
+    if bullet_inflight == True :
+        bullet_box = pygame.draw.circle(screen,"orange",[bullet_pos.x ,bullet_pos.y ],5)
     
     
     
@@ -93,6 +124,14 @@ while running:
             running = False
         if wall_box.colliderect(enemy_box):
             enemy_hits_wall = True
+        if  bullet_box is not None and  wall_box.colliderect(bullet_box):
+            bullet_pos=player_pos.copy()
+            bullet_direction= None
+            bullet_inflight=False
+    if bullet_pos.x < 0 or bullet_pos.x>640 or bullet_pos.y<0 or bullet_pos.y>480:
+        bullet_pos=player_pos.copy()
+        bullet_direction= None
+        bullet_inflight=False
             
             
       
@@ -100,9 +139,15 @@ while running:
     pygame.display.flip()
     clock.tick(60)
 if GAME_OVER:
-    screen.blit(text, textRect)
-    print("wall_hit")
-    pygame.display.flip()
+    game_over_screen = True
+    while (game_over_screen == True):
+        screen.blit(text, textRect)
+        print("wall_hit")
+        pygame.display.flip()
+        for event in  pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_over_screen = False
+                pygame.quit()
 else:
     pygame.quit()
 
